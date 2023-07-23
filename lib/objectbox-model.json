@@ -1,0 +1,258 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:7404915061601985081",
+      "lastPropertyId": "9:39795470768256308",
+      "name": "Chapter",
+      "properties": [
+        {
+          "id": "1:3861090007736717555",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3177957672925488017",
+          "name": "chapterId",
+          "type": 6
+        },
+        {
+          "id": "3:6664497570300867727",
+          "name": "chapterOrderId",
+          "type": 6
+        },
+        {
+          "id": "4:2365062685862021004",
+          "name": "courseId",
+          "type": 6
+        },
+        {
+          "id": "5:588275325284121449",
+          "name": "chapterDescrip",
+          "type": 9
+        },
+        {
+          "id": "6:6898161187639581085",
+          "name": "chapterName",
+          "type": 9
+        },
+        {
+          "id": "7:3557115757720761817",
+          "name": "quesNum",
+          "type": 6
+        },
+        {
+          "id": "8:314902130706333835",
+          "name": "quesTime",
+          "type": 6
+        },
+        {
+          "id": "9:39795470768256308",
+          "name": "progress",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:9053878565315574588",
+      "lastPropertyId": "6:6916359913654828906",
+      "name": "FirebaseLocalNotification",
+      "properties": [
+        {
+          "id": "1:1549482739562687613",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4120248776441120976",
+          "name": "isLive",
+          "type": 9
+        },
+        {
+          "id": "3:3384067791660709696",
+          "name": "dataTitle",
+          "type": 9
+        },
+        {
+          "id": "4:4500443888049963492",
+          "name": "dataBody",
+          "type": 9
+        },
+        {
+          "id": "5:486660275391700162",
+          "name": "dataLink",
+          "type": 9
+        },
+        {
+          "id": "6:6916359913654828906",
+          "name": "dataImageLink",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:739835613315059878",
+      "lastPropertyId": "4:8013174645453365190",
+      "name": "HighScore",
+      "properties": [
+        {
+          "id": "1:7982191930201866416",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7473720940423056605",
+          "name": "coursecode",
+          "type": 9
+        },
+        {
+          "id": "3:8660581152956728995",
+          "name": "chapterName",
+          "type": 9
+        },
+        {
+          "id": "4:8013174645453365190",
+          "name": "score",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:4438445763303632323",
+      "lastPropertyId": "10:3354060474848758729",
+      "name": "Question",
+      "properties": [
+        {
+          "id": "1:9108074647425217572",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6939372603507816888",
+          "name": "courseId",
+          "type": 6
+        },
+        {
+          "id": "3:6498248217149435911",
+          "name": "chapterId",
+          "type": 6
+        },
+        {
+          "id": "4:4269700085437339139",
+          "name": "question",
+          "type": 9
+        },
+        {
+          "id": "5:1473220820051302872",
+          "name": "correctAnswer",
+          "type": 9
+        },
+        {
+          "id": "6:8639258681293365666",
+          "name": "solution",
+          "type": 9
+        },
+        {
+          "id": "7:5460945727531095455",
+          "name": "option2",
+          "type": 9
+        },
+        {
+          "id": "8:2639053387414287933",
+          "name": "option3",
+          "type": 9
+        },
+        {
+          "id": "9:680360506538924923",
+          "name": "option4",
+          "type": 9
+        },
+        {
+          "id": "10:3354060474848758729",
+          "name": "isRead",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:6343919147638927820",
+      "lastPropertyId": "10:8092652691112594613",
+      "name": "RegCourse",
+      "properties": [
+        {
+          "id": "1:1556050457851675922",
+          "name": "courseId",
+          "type": 6
+        },
+        {
+          "id": "2:2211902723811375690",
+          "name": "courseName",
+          "type": 9
+        },
+        {
+          "id": "3:3280025535158152327",
+          "name": "coursecode",
+          "type": 9
+        },
+        {
+          "id": "4:4641003378697072288",
+          "name": "courseDescrip",
+          "type": 9
+        },
+        {
+          "id": "5:7761860310472845269",
+          "name": "expireAt",
+          "type": 9
+        },
+        {
+          "id": "6:1812802038240323545",
+          "name": "courseImage",
+          "type": 9
+        },
+        {
+          "id": "7:8793788180722161255",
+          "name": "progress",
+          "type": 6
+        },
+        {
+          "id": "8:118412640805091654",
+          "name": "courseChatLink",
+          "type": 9
+        },
+        {
+          "id": "9:1921012200650775586",
+          "name": "courseMaterialLink",
+          "type": 9
+        },
+        {
+          "id": "10:8092652691112594613",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "5:6343919147638927820",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

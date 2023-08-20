@@ -6,10 +6,21 @@ String schoolBaseUrl = '';
 String baseUrl = '';
 String userType = '';
 String token = '';
-bool? isUserLoggedIn;
+bool? isUserLoggedIn = true;
 Dio _dio = Dio();
 
 class ServiceImplementation implements HttpService {
+  @override
+  void init() {
+    getAuthCredentials();
+    _dio = Dio(BaseOptions(baseUrl: baseUrl, headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    }));
+    //initializeInterceptors();
+    //getRequest("/faculty");
+  }
+
   @override
   Future<Response> getRequest(String url) async {
     // ignore: unused_local_variable
@@ -23,16 +34,14 @@ class ServiceImplementation implements HttpService {
             'Authorization': 'Bearer $token'
           }));
     } on DioError catch (e) {
-      print(e.message);
       throw Exception(e.message);
     }
-    //print(response.data);
     return response;
   }
 
   Future getAuthCredentials() async {
     await Constants.getUerLoggedInSharedPreference().then((value) {
-      isUserLoggedIn = value!;
+      isUserLoggedIn = value;
     });
     await Constants.getUserTypeSharedPreference().then((value) {
       userType = value.toString();
@@ -47,31 +56,14 @@ class ServiceImplementation implements HttpService {
     baseUrl = '$schoolBaseUrl/$userType';
   }
 
-  // initializeInterceptors() {
-  //   _dio.interceptors.add(InterceptorsWrapper(
-  //       onError: (DioError err, ErrorInterceptorHandler handler) {
-  //     print(
-  //         'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
-  //     //return super.onError(err, handler);
-  //   }, onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-  //     print('REQUEST[${options.method}] => PATH: ${options.path}');
-  //     //return super.onRequest(options, handler);
-  //   }, onResponse: (Response response, ResponseInterceptorHandler handler) {
-  //     print(
-  //         'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
-  //     //return (response, handler);
-  //   }));
-  // }
-
-  @override
-  void init() {
-    getAuthCredentials();
-    _dio = Dio(BaseOptions(baseUrl: baseUrl, headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    }));
-    //initializeInterceptors();
-    //getRequest("/faculty");
+  initializeInterceptors() {
+    _dio.interceptors.add(InterceptorsWrapper(
+        onError: (DioError err, ErrorInterceptorHandler handler) {},
+        onRequest:
+            (RequestOptions options, RequestInterceptorHandler handler) {},
+        onResponse: (Response response, ResponseInterceptorHandler handler) {
+          if (response.data == "unauthenticated") {}
+        }));
   }
 
   @override
@@ -88,7 +80,6 @@ class ServiceImplementation implements HttpService {
             'Authorization': 'Bearer $token'
           }));
     } on DioError catch (e) {
-      print(e.message);
       throw Exception(e.message);
     }
     return response;

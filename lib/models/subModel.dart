@@ -1,13 +1,14 @@
 class Subscription {
   int? id;
   String? planName;
-  int? planPrice;
+  String? planPrice;
   String? planCode;
   String? description1;
   String? description2;
   String? description3;
   String? description4;
   String? description5;
+  String? introUrl;
   Subscription(
       {this.id,
       this.planName,
@@ -17,7 +18,8 @@ class Subscription {
       this.description2,
       this.description3,
       this.description4,
-      this.description5});
+      this.description5,
+      this.introUrl});
 
   factory Subscription.fromJson(Map<String, dynamic> json) {
     return Subscription(
@@ -30,6 +32,7 @@ class Subscription {
       description3: json['description3'],
       description4: json['description4'],
       description5: json['description5'],
+      introUrl: json['introUrl'],
     );
   }
 }

@@ -43,13 +43,12 @@ class _StalHomeState extends State<StalHome> {
       isLoading = true;
     });
     List<Faculty> data = await _apiRepository.getFaculty();
-    print(data);
-    print("$data goodluck");
     setState(() {
       isLoading = false;
     });
     setState(() {
       faculty = data;
+      faculty.reversed;
       facultyDropDown = getFacultyDropDown();
       _currentFaculty = faculty[0].facultyId;
     });
@@ -60,8 +59,6 @@ class _StalHomeState extends State<StalHome> {
       isLoading = true;
     });
     List<CourseLevel> data = await _apiRepository.getCourseLevel();
-    print(data);
-    print("$data goodluck");
     setState(() {
       isLoading = false;
     });
@@ -74,9 +71,9 @@ class _StalHomeState extends State<StalHome> {
 
   departmentList(facultyId) async {
     List<Department> data = await _apiRepository.getDepartment(facultyId);
-    print(data);
     setState(() {
       department = data;
+      // department.reversed;
       departmentDropDown = getDepartmentDropDown();
       _currentDepartment = department[0].departmentId;
     });
@@ -122,7 +119,9 @@ class _StalHomeState extends State<StalHome> {
                 child: Text(
                   faculty[i].facultyName.toString(),
                   style: TextStyle(
-                      color: Colors.purple, fontWeight: FontWeight.bold),
+                      color: Colors.purple,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
                 ),
                 value: faculty[i].facultyId));
       });
@@ -140,7 +139,9 @@ class _StalHomeState extends State<StalHome> {
                 child: Text(
                   courseLevel[i].name.toString(),
                   style: TextStyle(
-                      color: Colors.purple, fontWeight: FontWeight.bold),
+                      color: Colors.purple,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
                 ),
                 value: courseLevel[i].level));
       });
@@ -158,7 +159,9 @@ class _StalHomeState extends State<StalHome> {
                 child: Text(
                   department[i].departmentName.toString(),
                   style: TextStyle(
-                      color: Colors.purple, fontWeight: FontWeight.bold),
+                      color: Colors.purple,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
                 ),
                 value: department[i].departmentId));
       });
@@ -173,6 +176,7 @@ class _StalHomeState extends State<StalHome> {
       appBar: AppBar(
         title: Text("Department Selection"),
         elevation: 0.5,
+        centerTitle: true,
         backgroundColor: Colors.purple,
         //brightness: Brightness.li,
       ),
@@ -188,17 +192,19 @@ class _StalHomeState extends State<StalHome> {
                 children: <Widget>[
                   Padding(padding: EdgeInsets.only(top: 1)),
                   DropdownButtonFormField(
+                    isExpanded: true,
                     decoration: InputDecoration(
                       hintText: "Select your Faculty",
                       labelText: "Faculty",
                       labelStyle: TextStyle(color: Colors.purple),
-                      icon: Icon(
-                        Icons.factory_outlined,
-                        color: Colors.purple,
-                        size: 40,
-                      ),
+                      // icon: Icon(
+                      //   Icons.factory_outlined,
+                      //   color: Colors.purple,
+                      //   size: 40,
+                      // ),
+
                       iconColor: Colors.purple,
-                      contentPadding: EdgeInsets.only(left: 20.0),
+                      contentPadding: EdgeInsets.all(5.0),
                       hintStyle: TextStyle(
                           color: Colors.purple, fontWeight: FontWeight.bold),
                       constraints: BoxConstraints(
@@ -227,13 +233,13 @@ class _StalHomeState extends State<StalHome> {
                             hintText: "Select your Department",
                             labelText: "Department",
                             labelStyle: TextStyle(color: Colors.purple),
-                            icon: Icon(
-                              Icons.house_rounded,
-                              color: Colors.purple,
-                              size: 40,
-                            ),
+                            // icon: Icon(
+                            //   Icons.house_rounded,
+                            //   color: Colors.purple,
+                            //   size: 40,
+                            // ),
                             iconColor: Colors.purple,
-                            contentPadding: EdgeInsets.only(left: 20.0),
+                            contentPadding: EdgeInsets.all(5),
                             hintStyle: TextStyle(
                                 color: Colors.purple,
                                 fontWeight: FontWeight.bold),
@@ -266,11 +272,11 @@ class _StalHomeState extends State<StalHome> {
                             hintText: "Select Semester",
                             labelText: "Semester",
                             labelStyle: TextStyle(color: Colors.purple),
-                            icon: Icon(
-                              Icons.segment_sharp,
-                              color: Colors.purple,
-                              size: 40,
-                            ),
+                            // icon: Icon(
+                            //   Icons.segment_sharp,
+                            //   color: Colors.purple,
+                            //   size: 40,
+                            // ),
                             iconColor: Colors.purple,
                             contentPadding: EdgeInsets.only(left: 20.0),
                             hintStyle: TextStyle(
@@ -333,11 +339,11 @@ class _StalHomeState extends State<StalHome> {
                             hintText: "Select Course Level",
                             labelText: "Level",
                             labelStyle: TextStyle(color: Colors.purple),
-                            icon: Icon(
-                              Icons.height_sharp,
-                              color: Colors.purple,
-                              size: 40,
-                            ),
+                            // icon: Icon(
+                            //   Icons.height_sharp,
+                            //   color: Colors.purple,
+                            //   size: 40,
+                            // ),
                             iconColor: Colors.purple,
                             contentPadding: EdgeInsets.only(left: 20.0),
                             hintStyle: TextStyle(
@@ -417,59 +423,6 @@ class _StalHomeState extends State<StalHome> {
                 ],
               ),
             ),
-      // bottomNavigationBar: BottomAppBar(
-      //   shape: CircularNotchedRectangle(),
-      //   notchMargin: 10,
-      //   child: Container(
-      //     // decoration: BoxDecoration(
-      //     //     border: Border.all(width: 1.5, color: Colors.purple)),
-      //     height: 60,
-      //     child: Container(
-      //         decoration: BoxDecoration(
-      //           boxShadow: [
-      //             BoxShadow(
-      //                 color: Colors.purple,
-      //                 offset: Offset(0, 4),
-      //                 blurRadius: 5.0)
-      //           ],
-      //           gradient: LinearGradient(
-      //             begin: Alignment.topLeft,
-      //             end: Alignment.bottomRight,
-      //             stops: [0.0, 1.0],
-      //             colors: [
-      //               HexColor("#DC54FE"),
-      //               HexColor("#8A02AE"),
-      //             ],
-      //           ),
-      //           color: Colors.deepPurple.shade300,
-      //           borderRadius: BorderRadius.circular(30),
-      //         ),
-      //         child: ElevatedButton(
-      //           style: ThemeHelper().buttonStyle(),
-      //           child: Padding(
-      //             padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-      //             child: Text(
-      //               "Continue",
-      //               style: TextStyle(
-      //                 fontSize: 20,
-      //                 fontWeight: FontWeight.bold,
-      //                 color: Colors.white,
-      //               ),
-      //             ),
-      //           ),
-      //           onPressed: visible < 0
-      //               ? () {
-      //                   Get.to(CourseReg(
-      //                     departmentId: _currentDepartment.toInt(),
-      //                     semester: _semester.toInt(),
-      //                     level: _currentCourseLevel.toInt(),
-      //                   ));
-      //                 }
-      //               : () {},
-      //         )),
-
-      //   ),
-      // )
     );
   }
 }

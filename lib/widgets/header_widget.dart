@@ -54,7 +54,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
                 gradient: new LinearGradient(
                     colors: [
                       Theme.of(context).primaryColor.withOpacity(0.4),
-                      Colors.blue.withOpacity(0.4),
+                      Colors.purple.withOpacity(0.4),
                     ],
                     begin: const FractionalOffset(0.0, 0.0),
                     end: const FractionalOffset(1.0, 0.0),
@@ -113,11 +113,31 @@ class _HeaderWidgetState extends State<HeaderWidget> {
                     ),
                     border: Border.all(width: 5, color: Colors.white),
                   ),
-                  child: Icon(
-                    _icon,
-                    color: Colors.white,
-                    size: 40.0,
-                  ),
+                  child: widget._icon != Icons.person_add_alt_1_rounded
+                      ? Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(width: 5, color: Colors.white),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 20,
+                                offset: const Offset(5, 5),
+                              ),
+                            ],
+                          ),
+                          child: Image.asset(
+                            "images/uniappLogo.png",
+                            height: 80,
+                            width: 80,
+                          ))
+                      : Icon(
+                          _icon,
+                          color: Colors.white,
+                          size: 40.0,
+                        ),
                 ),
               ),
             ),

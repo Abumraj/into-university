@@ -1,18 +1,19 @@
+import 'dart:isolate';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:get/get.dart';
-import 'package:uniapp/Services/serviceImplementation.dart';
 import 'package:uniapp/screens/departmentSelecton.dart';
 import 'package:uniapp/screens/highscore.dart';
 import 'package:uniapp/screens/postSubscription.dart';
 import 'package:uniapp/screens/postUtme.dart';
 import 'package:uniapp/widgets/courseHeader.dart';
 import 'package:uniapp/widgets/hexColor.dart';
-import 'package:uniapp/widgets/theme.dart';
 import 'package:uniapp/widgets/theme_helper.dart';
-
+import 'package:timeago/timeago.dart' as timeago;
+import '../dbHelper/constant.dart';
 import '../dbHelper/db.dart';
-import '../models/highScoreModel.dart';
-import '../models/regCourseModel.dart';
+import '../entities.dart';
 
 class Regcourse extends StatefulWidget {
   Regcourse({Key? key}) : super(key: key);
@@ -22,29 +23,59 @@ class Regcourse extends StatefulWidget {
 }
 
 class _RegcourseState extends State<Regcourse> {
-  // final regcourseController = Get.put(RegCourseController());
-  DbHelper _dbHelper = DbHelper();
   List<RegCourse> regCourse = [];
   List<HighScore> highScore = [];
   bool isLoading = false;
+  final ReceivePort _port = ReceivePort();
   int index = 0;
-
+  String? userType;
   @override
   void initState() {
     loadRegCourse();
     super.initState();
+    IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
+    FlutterDownloader.registerCallback(downloadCallback);
+  }
+
+  @override
+  void dispose() {
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
+    super.dispose();
+  }
+
+  static void downloadCallback(
+      String id, DownloadTaskStatus status, int progress) {
+    final SendPort send =
+        IsolateNameServer.lookupPortByName('downloader_send_port')!;
+    send.send([id, status, progress]);
   }
 
   loadRegCourse() async {
     setState(() {
       isLoading = true;
     });
-    final result = await _dbHelper.getAllRegCourse();
-    print("result $result");
+    await Constants.getFirebaseTokenSharedPreference().then((value) {
+      userType = value.toString();
+    });
+    final result = await ObjectBox.getAllRegCourse();
     setState(() {
       isLoading = false;
       regCourse = result;
     });
+    if (DateTime.parse(result[0].expireAt!).isBefore(DateTime.now())) {
+      await ObjectBox.truncateTable2();
+      await ObjectBox.truncateTable3();
+      await ObjectBox.truncateTable5();
+      await ObjectBox.truncateTable6();
+
+      List<DownloadTask>? getTasks = await FlutterDownloader.loadTasks();
+      for (var _task in getTasks!) {
+        FlutterDownloader.remove(
+          taskId: _task.taskId,
+        );
+      }
+    }
   }
 
   @override
@@ -54,7 +85,7 @@ class _RegcourseState extends State<Regcourse> {
       child: isLoading
           ? Center(
               child: CircularProgressIndicator(
-                color: purple,
+                color: Colors.purple,
               ),
             )
           : view(),
@@ -65,7 +96,8 @@ class _RegcourseState extends State<Regcourse> {
     return Stack(children: <Widget>[
       Container(
         height: 150,
-        child: HeaderWidget1(150, true, "My Registered Courses"),
+        child: HeaderWidget1(
+            150, regCourse.isEmpty ? true : false, "My Registered Courses"),
       ),
       regCourse.isEmpty
           ? Center(
@@ -94,7 +126,7 @@ class _RegcourseState extends State<Regcourse> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
                     child: Text(
-                      userType == "stalite"
+                      userType == "semesterBased"
                           ? "Register".toUpperCase()
                           : "subscribe".toUpperCase(),
                       style: TextStyle(
@@ -105,7 +137,7 @@ class _RegcourseState extends State<Regcourse> {
                     ),
                   ),
                   onPressed: () {
-                    userType == "stalite"
+                    userType == "semesterBased"
                         ? Get.to(StalHome())
                         : Get.to(PosSubHome());
                   },
@@ -115,7 +147,7 @@ class _RegcourseState extends State<Regcourse> {
           : Container(
               child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 0.8),
+                  crossAxisCount: 2, childAspectRatio: 0.9),
               itemBuilder: (BuildContext context, int index) {
                 var courseVideo = regCourse[index];
 
@@ -123,6 +155,8 @@ class _RegcourseState extends State<Regcourse> {
                   id: courseVideo.courseId!.toInt(),
                   code: courseVideo.coursecode.toString(),
                   description: courseVideo.courseDescrip.toString(),
+                  expireAt: courseVideo.expireAt.toString(),
+                  progress: courseVideo.progress!,
                 );
               },
               itemCount: regCourse.length,
@@ -135,36 +169,37 @@ class SingleProt extends StatelessWidget {
   final int id;
   final String code;
   final String description;
+  final String expireAt;
+  final int progress;
 
-  SingleProt({
-    required this.id,
-    required this.code,
-    required this.description,
-  });
+  SingleProt(
+      {required this.id,
+      required this.code,
+      required this.description,
+      required this.expireAt,
+      required this.progress});
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(top: 12, left: 8, right: 8),
       child: MaterialButton(
           padding: EdgeInsets.zero,
           height: 60,
-          elevation: 1.0,
+          splashColor: Colors.purple,
+          elevation: 2.0,
           onPressed: () {
             Get.to(PostUtme(coursecode: code, courseId: id));
           },
           onLongPress: () {
             Get.bottomSheet(
-              BottomSheet(
-                backgroundColor: Colors.white,
-                builder: (_) => CourseProgress(
+                CourseProgress(
                   coursecode: code,
                 ),
-                onClosing: () {},
-              ),
-            );
+                isScrollControlled: true,
+                enterBottomSheetDuration: Duration(seconds: 2));
           },
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(15.0),
           ),
           color: Colors.grey.shade800,
           textColor: Colors.white70,
@@ -175,13 +210,13 @@ class SingleProt extends StatelessWidget {
               Icon(
                 Icons.video_collection,
                 size: 30,
-                color: Colors.purple,
+                color: Colors.white,
               ),
               SizedBox(height: 8.0),
               Text(
                 code,
                 style: TextStyle(
-                    color: Colors.purple,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 12),
                 textAlign: TextAlign.center,
@@ -191,7 +226,7 @@ class SingleProt extends StatelessWidget {
               Text(
                 description.toString(),
                 style: TextStyle(
-                    color: Colors.purple[500],
+                    color: Colors.white,
                     fontWeight: FontWeight.w400,
                     fontSize: 10),
                 textAlign: TextAlign.center,
@@ -230,120 +265,27 @@ class SingleProt extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(height: 8.0),
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(0.5),
+                    child: LinearProgressIndicator(
+                      color: Colors.green,
+                      backgroundColor: Colors.white,
+                      value: progress / 100,
+                      semanticsLabel: "$progress%",
+                    ),
+                  ),
+                  SizedBox(height: 4.0),
+                  Text(
+                    "Expires ${timeago.format(DateTime.parse(expireAt.toString()), allowFromNow: true)}",
+                    style: TextStyle(color: Colors.red[400], fontSize: 12),
+                  ),
+                ],
+              )
             ],
           )),
     );
-
-    // ClipRRect(
-    //       borderRadius: BorderRadius.all(
-    //         Radius.circular(10.0),
-    //       ),
-    //       child: InkWell(
-    //         onTap: () {
-    //           Navigator.of(context).push(
-    //             MaterialPageRoute(
-    //                 builder: (context) =>
-    //                     VideoLists(courseId: id, coursecode: code)),
-    //           );
-    //         },
-    //         child: Stack(
-    //           children: <Widget>[
-    //             Container(
-    //               height: 150.0,
-    //               width: 300.0,
-    //               child: Image(
-    //                 image: NetworkImage(imagePath),
-    //                 fit: BoxFit.cover,
-    //               ),
-    //             ),
-    //             Positioned(
-    //               child: Container(
-    //                 decoration: BoxDecoration(
-    //                     gradient: LinearGradient(
-    //                         begin: Alignment.bottomCenter,
-    //                         end: Alignment.topCenter,
-    //                         colors: [Colors.black, Colors.black12])),
-    //               ),
-    //             ),
-    //             Positioned(
-    //               left: 10.0,
-    //               bottom: 10.0,
-    //               right: 10.0,
-    //               child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                 children: <Widget>[
-    //                   Column(
-    //                     crossAxisAlignment: CrossAxisAlignment.start,
-    //                     children: <Widget>[
-    //                       Text(
-    //                         code,
-    //                         style: TextStyle(
-    //                             fontSize: 18.0,
-    //                             fontWeight: FontWeight.bold,
-    //                             color: Colors.white),
-    //                       ),
-
-    //                     ],
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ));
   }
-
-  // ListTile(
-  //                 isThreeLine: true,
-  //                 dense: true,
-  //                 leading: Container(
-  //                   width: 50,
-  //                   height: 50,
-  //                   decoration: BoxDecoration(
-  //                       borderRadius: BorderRadius.circular(10),
-  //                       image: DecorationImage(
-  //                           image: NetworkImage(
-  //                               chapterList[index].chapterImage.toString()),
-  //                           fit: BoxFit.fill)),
-  //                 ),
-  //                 title: Text(
-  //                   chapterList[index].chapterName.toString(),
-  //                   style: TextStyle(
-  //                       color: Colors.purple,
-  //                       fontSize: 15,
-  //                       fontWeight: FontWeight.bold),
-  //                 ),
-  //                 subtitle: Padding(
-  //                   padding: const EdgeInsets.only(
-  //                       top: 8.0, right: 8.0, bottom: 8.0),
-  //                   child: Text.rich(
-  //                     TextSpan(
-  //                         text: chapterList[index].chapterDescrip.toString()),
-  //                     softWrap: true,
-  //                     maxLines: 3,
-  //                     style: TextStyle(
-  //                       fontSize: 12,
-  //                       color: Colors.purple[500],
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 trailing: Badge(
-  //                   toAnimate: true,
-  //                   shape: BadgeShape.square,
-  //                   badgeColor: Colors.white,
-  //                   borderRadius: BorderRadius.circular(10),
-  //                   badgeContent: Text(
-  //                       "${chapterList[index].chapterVideoNum.toString()}",
-  //                       style: TextStyle(
-  //                           fontSize: 16,
-  //                           color: Colors.purple,
-  //                           fontWeight: FontWeight.bold)),
-  //                   child: Icon(
-  //                     Icons.video_collection_sharp,
-  //                     size: 30,
-  //                     color: Colors.purple,
-  //                   ),
-  //                 ),
-  //               ),
-
 }

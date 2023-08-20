@@ -20,16 +20,18 @@ abstract class ApiRepository {
   Future<List<Question>> getQuestions();
   Future<List<RegCourse>> getRegCourse();
   Future<List<VideoList>> getVideoList(int chapterId);
-  Future<List<ChapterList>> getChapterList(int courseId);
+  Future<List<ChapterList>> getChapterList();
   Future<List<CourseVideo>> getVideo();
+  Future<List<CourseVideo>> getEndVideo();
   Future<List<DepartCourse>> getCart();
   Future<dynamic> addToCart(int courseId, String courseCode, int coursePrice);
   Future<dynamic> deleteACourse(String courseCode);
   Future<dynamic> emptyCourseCart();
   Future<dynamic> logOUT();
   Future<List<Subscription>> getSubscription();
-  Future<dynamic> getAccessCode(String planCode, int amount, String email);
+  Future<dynamic> getAccessCode(String reference);
   Future<dynamic> getStaAccessCode(int amount, String email);
   Future<dynamic> verifyTransaction(String reference);
+  Future<dynamic> saveToken(String reference);
   Future<dynamic> writeAreview(String title, String description);
 }

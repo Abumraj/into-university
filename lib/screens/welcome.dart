@@ -83,13 +83,15 @@ class _WelcomeState extends State<Welcome> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    FlatButton(
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
                       onPressed: () {
                         controller.animateToPage(3,
                             duration: Duration(milliseconds: 400),
                             curve: Curves.easeInCirc);
                       },
-                      splashColor: Colors.purple,
                       child: Text(
                         "SKIP",
                         style: TextStyle(
@@ -106,14 +108,15 @@ class _WelcomeState extends State<Welcome> {
                         ],
                       ),
                     ),
-                    FlatButton(
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
                       onPressed: () {
-                        print("this is slideIndex: $slideIndex");
                         controller.animateToPage(slideIndex + 1,
                             duration: Duration(milliseconds: 500),
                             curve: Curves.easeInCirc);
                       },
-                      splashColor: Colors.purple,
                       child: Text(
                         "NEXT",
                         style: TextStyle(
@@ -162,7 +165,10 @@ class SlideTile extends StatelessWidget {
           CircleAvatar(
               radius: 98,
               backgroundColor: Colors.white,
-              child: Image.asset(imagePath)),
+              child: Image.asset(
+                imagePath,
+                width: 110,
+              )),
           SizedBox(
             height: 30,
           ),

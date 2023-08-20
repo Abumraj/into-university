@@ -1,11 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:uniapp/models/videoCallModel.dart';
 // import 'package:uniapp/screens/download.dart';
 import 'package:uniapp/screens/videoList.dart';
-
-import '../repository/apiRepository.dart';
-import '../repository/apiRepositoryimplementation.dart';
+import '../dbHelper/db.dart';
+import '../entities.dart';
 import '../screens/download.dart';
 import '../widgets/courseHeader.dart';
 
@@ -17,11 +16,7 @@ class AspirantVideo extends StatefulWidget {
 }
 
 class _AspirantVideoState extends State<AspirantVideo> {
-  ApiRepository _apiRepository = Get.put(ApiRepositoryImplementation());
-
-  List<CourseVideo> couseVideo = [];
-
-  //final CourseVidseoController controller = Get.put(CourseVidseoController());
+  List<RegCourse> couseVideo = [];
 
   @override
   void initState() {
@@ -30,12 +25,8 @@ class _AspirantVideoState extends State<AspirantVideo> {
   }
 
   loadCourseVideo() async {
-    //print(isLoading);
+    final result = await ObjectBox.getAllRegCourse();
 
-    final result = await _apiRepository.getVideo();
-    print("result $result");
-
-    print(result.isNotEmpty);
     if (result.isNotEmpty) {
       setState(() {
         couseVideo = result;
@@ -54,7 +45,8 @@ class _AspirantVideoState extends State<AspirantVideo> {
         children: [
           Container(
             height: 150,
-            child: HeaderWidget1(150, true, "My Video Lessons"),
+            child: HeaderWidget1(
+                150, couseVideo.isEmpty ? false : true, "My Video Lessons"),
           ),
           Container(
               child: couseVideo.isEmpty
@@ -68,12 +60,12 @@ class _AspirantVideoState extends State<AspirantVideo> {
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2, childAspectRatio: 0.8),
                       itemBuilder: (BuildContext context, int index) {
-                        CourseVideo courseVideo = couseVideo[index];
+                        RegCourse courseVideo = couseVideo[index];
 
                         return SingleProd(
                           id: courseVideo.courseId!.toInt(),
                           code: courseVideo.coursecode.toString(),
-                          description: courseVideo.courseDescription.toString(),
+                          description: courseVideo.courseDescrip.toString(),
                           imagePath: courseVideo.courseImage.toString(),
                         );
                       },
@@ -87,7 +79,7 @@ class _AspirantVideoState extends State<AspirantVideo> {
         tooltip: 'Downloads',
         child: Icon(Icons.folder),
         onPressed: () {
-          Get.to(Downloads());
+          Get.to(OfflineDownloads());
         },
       ),
     );
@@ -126,11 +118,22 @@ class SingleProd extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Image(
-                width: 240,
-                height: 120,
-                image: NetworkImage(imagePath),
-                fit: BoxFit.cover,
+              CachedNetworkImage(
+                imageUrl: imagePath,
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                useOldImageOnUrlChange: true,
+                placeholder: (context, url) => Center(
+                    child: const CircularProgressIndicator(
+                  color: Colors.purple,
+                )),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
               SizedBox(height: 8.0),
               Text(
@@ -188,63 +191,5 @@ class SingleProd extends StatelessWidget {
             ],
           )),
     );
-
-    // ClipRRect(
-    //       borderRadius: BorderRadius.all(
-    //         Radius.circular(10.0),
-    //       ),
-    //       child: InkWell(
-    //         onTap: () {
-    //           Navigator.of(context).push(
-    //             MaterialPageRoute(
-    //                 builder: (context) =>
-    //                     VideoLists(courseId: id, coursecode: code)),
-    //           );
-    //         },
-    //         child: Stack(
-    //           children: <Widget>[
-    //             Container(
-    //               height: 150.0,
-    //               width: 300.0,
-    //               child: Image(
-    //                 image: NetworkImage(imagePath),
-    //                 fit: BoxFit.cover,
-    //               ),
-    //             ),
-    //             Positioned(
-    //               child: Container(
-    //                 decoration: BoxDecoration(
-    //                     gradient: LinearGradient(
-    //                         begin: Alignment.bottomCenter,
-    //                         end: Alignment.topCenter,
-    //                         colors: [Colors.black, Colors.black12])),
-    //               ),
-    //             ),
-    //             Positioned(
-    //               left: 10.0,
-    //               bottom: 10.0,
-    //               right: 10.0,
-    //               child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                 children: <Widget>[
-    //                   Column(
-    //                     crossAxisAlignment: CrossAxisAlignment.start,
-    //                     children: <Widget>[
-    //                       Text(
-    //                         code,
-    //                         style: TextStyle(
-    //                             fontSize: 18.0,
-    //                             fontWeight: FontWeight.bold,
-    //                             color: Colors.white),
-    //                       ),
-
-    //                     ],
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ));
   }
 }

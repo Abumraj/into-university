@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:get/get.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:html_unescape/html_unescape.dart';
-import 'package:uniapp/models/questionModel.dart';
-import 'package:uniapp/screens/mainscreen.dart';
+import 'package:uniapp/screens/home.dart';
 
-class CheckAnswersPage extends StatelessWidget {
+import '../entities.dart';
+
+class CheckAnswersPage extends StatefulWidget {
   final List<Question>? questions;
   final Map<int, dynamic>? answers;
 
@@ -13,9 +16,26 @@ class CheckAnswersPage extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<CheckAnswersPage> createState() => _CheckAnswersPageState();
+}
+
+class _CheckAnswersPageState extends State<CheckAnswersPage> {
+  @override
+  void initState() {
+    secureScreen();
+    super.initState();
+  }
+
+  Future<void> secureScreen() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.purple,
         title: Text('Check Solution'),
         elevation: 0,
       ),
@@ -30,7 +50,7 @@ class CheckAnswersPage extends StatelessWidget {
           ),
           ListView.builder(
             padding: const EdgeInsets.all(16.0),
-            itemCount: questions!.length + 1,
+            itemCount: widget.questions!.length + 1,
             itemBuilder: _buildItem,
           )
         ],
@@ -39,17 +59,21 @@ class CheckAnswersPage extends StatelessWidget {
   }
 
   Widget _buildItem(BuildContext context, int index) {
-    if (index == questions!.length) {
-      return RaisedButton(
-        child: Text("Done"),
+    if (index == widget.questions!.length) {
+      return TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+          elevation: 0.2,
+          textStyle: TextStyle(color: Colors.white),
+        ),
+        child: Text("Done", style: TextStyle(color: Colors.white)),
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => MainScreen()));
+          Get.offAll(Home());
         },
       );
     }
-    Question question = questions![index];
-    bool correct = question.correctAnswer == answers![index];
+    Question question = widget.questions![index];
+    bool correct = question.correctAnswer == widget.answers![index];
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -65,7 +89,7 @@ class CheckAnswersPage extends StatelessWidget {
             ),
             SizedBox(height: 5.0),
             Text(
-              HtmlUnescape().convert("${answers![index]}"),
+              HtmlUnescape().convert("${widget.answers![index]}"),
               style: TextStyle(
                   color: correct ? Colors.green : Colors.red,
                   fontSize: 18.0,
@@ -76,9 +100,11 @@ class CheckAnswersPage extends StatelessWidget {
                 ? Container()
                 : Text.rich(
                     TextSpan(children: [
-                      TextSpan(text: "Answer: "),
                       TextSpan(
-                          text: HtmlUnescape().convert(question.correctAnswer),
+                          text: "Answer: ",
+                          style: TextStyle(color: Colors.purple[800])),
+                      TextSpan(
+                          text: HtmlUnescape().convert(question.correctAnswer!),
                           style: TextStyle(fontWeight: FontWeight.w500))
                     ]),
                     style: TextStyle(fontSize: 16.0),
@@ -87,12 +113,19 @@ class CheckAnswersPage extends StatelessWidget {
                 ? Container()
                 : Text.rich(
                     TextSpan(children: [
-                      TextSpan(text: "Solution: "),
                       TextSpan(
-                          text: HtmlUnescape().convert(question.solution != null
-                              ? question.solution
-                              : "Solution not available for this question"),
-                          style: TextStyle(fontWeight: FontWeight.w500))
+                          text: "Solution: ",
+                          style: TextStyle(color: Colors.purple[800])),
+                      TextSpan(
+                          text: HtmlUnescape().convert(
+                              question.solution.toString() != "null"
+                                  ? question.solution.toString()
+                                  : "Solution not available for this question"),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: question.solution.toString() != "null"
+                                  ? Colors.purple
+                                  : Colors.red))
                     ]),
                     style: TextStyle(fontSize: 16.0),
                   )

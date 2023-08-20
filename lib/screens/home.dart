@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:uniapp/Services/serviceImplementation.dart';
+import 'package:get/get.dart';
 import 'package:uniapp/dbHelper/constant.dart';
 import 'package:uniapp/pages/aspirantPdf.dart';
 import 'package:uniapp/screens/departmentSelecton.dart';
-import 'package:uniapp/screens/liveEvents.dart';
 import 'package:uniapp/screens/mainscreen.dart';
 import 'package:uniapp/screens/phone.dart';
 import 'package:uniapp/screens/postSubscription.dart';
+import 'package:uniapp/screens/unihub.dart';
+import 'package:uniapp/screens/unitrans.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -22,21 +23,20 @@ class _HomeState extends State<Home> {
     StalHome(),
     PosSubHome(),
     AspirantPdf(),
-    Live(),
+    UniTrans(),
     PhoneSecurity()
   ];
   String? userType;
   @override
   void initState() {
     _getUserTypeInState();
-    print("$isUserLoggedIn scores");
     super.initState();
   }
 
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentPage = MainScreen();
   _getUserTypeInState() async {
-    await Constants.getUserTypeSharedPreference().then((value) {
+    await Constants.getFirebaseTokenSharedPreference().then((value) {
       setState(() {
         userType = value.toString();
       });
@@ -61,8 +61,6 @@ class _HomeState extends State<Home> {
         shape: CircularNotchedRectangle(),
         notchMargin: 10,
         child: Container(
-          // decoration: BoxDecoration(
-          //     border: Border.all(width: 1.5, color: Colors.purple)),
           height: 60,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,9 +100,9 @@ class _HomeState extends State<Home> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        userType == "stalite"
-                            ? currentPage = StalHome()
-                            : PosSubHome();
+                        userType == "semesterBased"
+                            ? Get.to(StalHome())
+                            : Get.to(PosSubHome());
                         currentTab = 1;
                       });
                     },
@@ -118,7 +116,9 @@ class _HomeState extends State<Home> {
                               : Colors.purple,
                         ),
                         Text(
-                          userType == "stalite" ? "Register" : "Subscribe",
+                          userType == "semesterBased"
+                              ? "Register"
+                              : "Subscribe",
                           style: TextStyle(
                             color: currentTab == 1
                                 ? Colors.purpleAccent
@@ -136,10 +136,7 @@ class _HomeState extends State<Home> {
                   MaterialButton(
                     minWidth: 40,
                     onPressed: () {
-                      setState(() {
-                        currentPage = AspirantPdf();
-                        currentTab = 2;
-                      });
+                      Get.to(Unihub());
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -165,7 +162,7 @@ class _HomeState extends State<Home> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentPage = Live();
+                        currentPage = UniTrans();
                         currentTab = 3;
                       });
                     },
@@ -173,13 +170,13 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          Icons.live_tv,
+                          Icons.taxi_alert_sharp,
                           color: currentTab == 3
                               ? Colors.purpleAccent
                               : Colors.purple,
                         ),
                         Text(
-                          "Live",
+                          "UniRide",
                           style: TextStyle(
                             color: currentTab == 3
                                 ? Colors.purpleAccent
@@ -189,31 +186,6 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-                  // MaterialButton(
-                  //   minWidth: 40,
-                  //   onPressed: () {
-                  //     setState(() {
-                  //       currentPage = PhoneSecurity();
-                  //       currentTab = 3;
-                  //     });
-                  //   },
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: [
-                  //       Icon(
-                  //         Icons.phone_locked_sharp,
-                  //         color: currentTab == 3 ? Colors.purple : Colors.white,
-                  //       ),
-                  //       Text(
-                  //         "Security",
-                  //         style: TextStyle(
-                  //           color:
-                  //               currentTab == 3 ? Colors.purple : Colors.white,
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                 ],
               )
             ],

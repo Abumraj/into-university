@@ -1,13 +1,13 @@
 import 'package:badges/badges.dart';
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uniapp/Services/uapi.dart';
 import 'package:uniapp/models/departCoursesModel.dart';
-import 'package:video_player/video_player.dart';
 import '../repository/apiRepository.dart';
 import '../repository/apiRepositoryimplementation.dart';
 import '../widgets/introvideopopup.dart';
 import 'checkout.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class CourseReg extends StatefulWidget {
   final int departmentId;
@@ -28,10 +28,8 @@ class _CourseRegState extends State<CourseReg> {
   late List<DepartCourse> selectedCourses;
   List<DepartCourse> _departCourse = [];
 
-  VideoPlayerController? _videoPlayerController;
-  ChewieController? _chewieController;
   String? message;
-  int _totalPrice = 0;
+  bool isLoading = true;
   @override
   void initState() {
     _loadDepartCourse();
@@ -43,31 +41,11 @@ class _CourseRegState extends State<CourseReg> {
   _loadDepartCourse() async {
     final result = await _apiRepository.getDepartCourses(
         widget.departmentId, widget.semester, widget.level);
-    if (result.isNotEmpty) {
-      setState(() {
-        _departCourse = result;
-      });
-      print(_departCourse);
-    }
+    setState(() {
+      isLoading = false;
+      _departCourse = result;
+    });
   }
-
-  // _addToCartList(courseId, courseCode, coursePrice) async {
-  //   await _apiRepository
-  //       .addToCart(courseId, courseCode, coursePrice)
-  //       .then((value) {
-  //     setState(() {
-  //       message = value.toString();
-  //     });
-  //   });
-  // }
-
-  // _deleteFromCartList(courseCode) async {
-  //   await _apiRepository.deleteACourse(courseCode).then((value) {
-  //     setState(() {
-  //       message = value.toString();
-  //     });
-  //   });
-  // }
 
   _emptyCartList() async {
     await _apiRepository.emptyCourseCart().then((value) {
@@ -77,45 +55,12 @@ class _CourseRegState extends State<CourseReg> {
     });
   }
 
-  // onSelectedAll(bool selected, DepartCourse course) {
-  //   if (selected) {
-  //     forEach(DepartCourse course) {
-  //       _addToCartList(
-  //           course.courseId!, course.coursecode!, course.coursePrice);
-  //     }
-  //     //forEach(selectAll);
-  //     //for (int j = 0; j < course.length; j++) {
-  //     //       if (result[i].videoName == offResult[j].videoName) {
-  //     //         result[i].videoUrl = offResult[j].videoUrl;
-  //     //         result[i].thumbUrl = offResult[j].thumbUrl;
-  //     //         result[i].status = offResult[j].status;
-  //     //       }
-  //     //     }
-
-  //     setState(() {
-  //       selectedCourses.add(course);
-  //       _totalPrice += course.coursePrice;
-  //       Get.snackbar("Shopping Cart", message!,
-  //           duration: Duration(microseconds: 500));
-  //     });
-  //   } else {
-  //     _deleteFromCartList(course.coursecode);
-
-  //     setState(() {
-  //       selectedCourses.remove(course);
-  //       _totalPrice -= course.coursePrice;
-  //       Get.snackbar("Shopping Cart", message!,
-  //           duration: Duration(microseconds: 500));
-  //     });
-  //   }
-  // }
-
   onSelectedRow(bool selected, DepartCourse course) async {
     String? message;
     if (selected) {
       //_addToCartList(course.courseId!, course.coursecode!, course.coursePrice);
       await _apiRepository
-          .addToCart(course.courseId!, course.coursecode!, course.coursePrice)
+          .addToCart(course.courseId!, course.coursecode!, course.coursePrice!)
           .then((value) {
         setState(() {
           message = value.toString();
@@ -124,11 +69,10 @@ class _CourseRegState extends State<CourseReg> {
       if (message != null) {
         setState(() {
           selectedCourses.add(course);
-          _totalPrice += course.coursePrice;
         });
-        Get.snackbar("Shopping Cart", message!,
-            backgroundColor: Colors.white,
-            colorText: Colors.purple,
+        Get.snackbar(course.coursecode!, message!,
+            backgroundColor: Colors.black87,
+            colorText: Colors.white,
             icon: Icon(
               Icons.shopping_cart,
               color: Colors.purple,
@@ -136,7 +80,6 @@ class _CourseRegState extends State<CourseReg> {
             duration: Duration(seconds: 3));
       }
     } else {
-      // _deleteFromCartList(course.coursecode);
       await _apiRepository.deleteACourse(course.coursecode!).then((value) {
         setState(() {
           message = value.toString();
@@ -145,12 +88,11 @@ class _CourseRegState extends State<CourseReg> {
       if (message != null) {
         setState(() {
           selectedCourses.remove(course);
-          _totalPrice -= course.coursePrice;
         });
       }
-      Get.snackbar("Shopping Cart", message!,
-          backgroundColor: Colors.white,
-          colorText: Colors.purple,
+      Get.snackbar(course.coursecode!, message!,
+          backgroundColor: Colors.black87,
+          colorText: Colors.white,
           icon: Icon(
             Icons.shopping_cart,
             color: Colors.purple,
@@ -171,12 +113,11 @@ class _CourseRegState extends State<CourseReg> {
             _departCourse.remove(course);
             selectedCourses.remove(course);
           }
-          _totalPrice = 0;
         });
       }
     }
-    Get.snackbar("Shopping Cart", message!,
-        backgroundColor: Colors.white,
+    Get.snackbar("All Courses", message!,
+        backgroundColor: Colors.black,
         colorText: Colors.purple,
         icon: Icon(
           Icons.shopping_cart,
@@ -185,52 +126,6 @@ class _CourseRegState extends State<CourseReg> {
         duration: Duration(seconds: 3));
     _loadDepartCourse();
   }
-
-  // showIntroVideo(coursecode, description, url) async {
-  //   var controller = _videoPlayerController;
-  //   bool isInitialized = false;
-  //   //url = extractPayload(url);
-  //   print(url);
-  //   final debunk = YoutubeExplode();
-  //   final stream = await debunk.videos.streamsClient.getManifest(url);
-  //   debunk.close();
-  //   setState(() {
-  //     controller = VideoPlayerController.network(
-  //         stream.muxed.bestQuality.url.toString());
-  //   });
-
-  //   controller!.initialize().then((_) {
-  //     setState(() {
-  //       isInitialized = true;
-  //     });
-  //   });
-  //   _chewieController = ChewieController(
-  //     videoPlayerController: _videoPlayerController!,
-  //     autoPlay: true,
-  //     looping: true,
-  //     aspectRatio: 16 / 9,
-  //     // overlay: DownloadButton(status: , progress: progress)
-  //   );
-  //   return showDialog(
-  //       context: context,
-  //       builder: (builder) {
-  //         return AlertDialog(
-  //           title: coursecode,
-  //           content: isInitialized
-  //               ? Column(
-  //                   children: [
-  //                     Chewie(controller: _chewieController!),
-  //                     Text(description)
-  //                   ],
-  //                 )
-  //               : Center(
-  //                   child: CircularProgressIndicator(
-  //                     color: Colors.purple,
-  //                   ),
-  //                 ),
-  //         );
-  //       });
-  // }
 
   SingleChildScrollView dataBody() {
     return SingleChildScrollView(
@@ -276,7 +171,6 @@ class _CourseRegState extends State<CourseReg> {
               (course) => DataRow(
                   selected: selectedCourses.contains(course),
                   onSelectChanged: (b) {
-                    //print("Onselect");
                     onSelectedRow(b!, course);
                   },
                   cells: [
@@ -307,7 +201,7 @@ class _CourseRegState extends State<CourseReg> {
                     ),
                     DataCell(
                       Center(
-                          child: Text(course.coursePrice < 1
+                          child: Text(course.coursePrice! < 1
                               ? "FREE"
                               : "₦${course.coursePrice}")),
                     ),
@@ -324,6 +218,44 @@ class _CourseRegState extends State<CourseReg> {
       appBar: AppBar(
         backgroundColor: Colors.purple,
         elevation: 1.0,
+        centerTitle: true,
+        title: AnimatedTextKit(
+          animatedTexts: [
+            FadeAnimatedText(
+              '15% Off',
+              textStyle: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32.0),
+              duration: const Duration(milliseconds: 5000),
+
+              // duration: Duration(seconds: 10),
+            ),
+            // speed: const Duration(milliseconds: 2000),
+            FadeAnimatedText(
+              'when you spend above ',
+              textStyle: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0),
+              duration: const Duration(milliseconds: 3000),
+
+              // duration: Duration(seconds: 10),
+            ),
+            FadeAnimatedText(
+              '₦5000',
+              textStyle: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32.0),
+              duration: const Duration(milliseconds: 5000),
+            ),
+          ],
+          repeatForever: true,
+          pause: const Duration(milliseconds: 100),
+          displayFullTextOnTap: true,
+          stopPauseOnTap: true,
+        ),
         actions: <Widget>[
           Padding(
               padding: const EdgeInsets.all(8.0),
@@ -348,108 +280,135 @@ class _CourseRegState extends State<CourseReg> {
                   ),
                 ),
               )),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: new MaterialButton(
-              child: Text(
-                '₦' + "$_totalPrice",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CheckoutPage(),
-                  ),
-                );
-              },
-              color: Colors.purple,
-            ),
-          ),
         ],
       ),
-      body: _departCourse.isEmpty
+      body: _departCourse.isEmpty && !isLoading
           ? Container(
+              decoration: new BoxDecoration(
+                  border:
+                      new Border.all(color: Colors.transparent, width: 25.0),
+                  color: Colors.transparent),
               child: Center(
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-            )
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              verticalDirection: VerticalDirection.down,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: Center(
-                      child: AnimatedDefaultTextStyle(
-                    maxLines: 1,
-                    child: Text(
-                        "COURSE REGISTRATION PER SEMESTER OR PER 4 MONTHS INCASE OF STRIKE"),
-                    style: TextStyle(
-                        color: Colors.purple,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0),
-                    duration: Duration(seconds: 10),
-                  )),
-                ),
-                Expanded(
-                  child: dataBody(),
-                ),
-                Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Padding(
-                      padding:
-                          EdgeInsets.only(left: 1.0, top: 20.0, right: 5.0),
-                      child: RaisedButton(
-                        color: Colors.purple,
-                        child: Text(
-                          'CHECKOUT',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => CheckoutPage(),
-                            ),
-                          );
-                        },
-                      ),
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Sorry, there is currently no tutorial for your department. Click below to make tutorial request",
+                      style: TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(left: 5.0, top: 20.0, right: 1.0),
-                      child: RaisedButton(
-                        color: Colors.purple,
-                        child: Text(
-                          'DELETE ALL',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: selectedCourses.isEmpty
-                            ? () {}
-                            : () {
-                                deleteSelected();
-                              },
-                      ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Uapi.joinTelegramGroupChat(
+                            "https://docs.google.com/forms/d/e/1FAIpQLSfNfTMGSS7mEMhOWoP-W00kR-yccwq8FMEEaBVtj5VvG5O-1Q/viewform?usp=pp_url",
+                            false);
+                      },
+                      child: const Text('Make Tutorial Request'),
                     ),
                   ],
                 ),
-              ],
-            ),
-    );
-  }
+              ),
+            )
+          : isLoading
+              ? Container(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  verticalDirection: VerticalDirection.down,
+                  children: <Widget>[
+                    AnimatedTextKit(
+                      repeatForever: true,
+                      animatedTexts: [
+                        TyperAnimatedText(
+                            'COURSE REGISTRATION PER SEMESTER OR PER 4 MONTHS',
+                            textStyle: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0),
+                            speed: Duration(milliseconds: 100)
+                            // duration: Duration(seconds: 10),
+                            ),
+                        // speed: const Duration(milliseconds: 2000),
+                        // FadeAnimatedText(
+                        //   'OR PER 4 MONTHS',
+                        //   textStyle: TextStyle(
+                        //       color: Colors.red,
+                        //       fontWeight: FontWeight.bold,
+                        //       fontSize: 16.0),
+                        //   // duration: Duration(seconds: 10),
+                        // ),
 
-  @override
-  void dispose() {
-    _videoPlayerController!.dispose();
-    _chewieController!.dispose();
-    super.dispose();
+                        // speed: const Duration(milliseconds: 2000),
+                      ],
+                      totalRepeatCount: 4,
+                      pause: const Duration(milliseconds: 1000),
+                      displayFullTextOnTap: true,
+                      stopPauseOnTap: true,
+                    ),
+                    Expanded(
+                      child: dataBody(),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 1.0, top: 20.0, right: 5.0),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                                backgroundColor: Colors.purple,
+                                elevation: 0.2,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                )),
+                            child: Text(
+                              'View Cart',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => CheckoutPage(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 5.0, top: 20.0, right: 1.0),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                                backgroundColor: Colors.purple,
+                                elevation: 0.2,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                )),
+                            child: Text(
+                              'DELETE ALL',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: selectedCourses.isEmpty
+                                ? () {}
+                                : () {
+                                    deleteSelected();
+                                  },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+    );
   }
 }

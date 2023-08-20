@@ -21,7 +21,6 @@ class _ProgramsState extends State<Programs> {
   var _currentProgram;
   var _currentSchool;
   late bool done = false;
-  late String _currentChannel;
   @override
   void initState() {
     _getFaculty();
@@ -30,7 +29,6 @@ class _ProgramsState extends State<Programs> {
 
   _getFaculty() async {
     List<Program>? data = await Uapi.getProgram();
-    print(data);
     setState(() {
       program = data!;
       programDropDown = getFacultyDropDown();
@@ -48,7 +46,6 @@ class _ProgramsState extends State<Programs> {
 
   _getDepatrment(_currentProgram) async {
     List<School> data = await Uapi.getSchool(_currentProgram);
-    print(data.length);
     setState(() {
       school = data;
       schoolDropDown = getDepartmentDropDown();
@@ -59,19 +56,14 @@ class _ProgramsState extends State<Programs> {
   changeSelectedDepartment(var selectedDepartment) async {
     setState(() => _currentSchool = selectedDepartment);
     Constants.saveUserSchoolSharedPreference(_currentSchool);
+    school.forEach((element) {
+      if (element.schoolCode == _currentSchool) {
+        Constants.saveFirebaseTopicByProgramInSharedPreference(
+            element.schoolName);
+      }
+    });
     done = true;
   }
-
-  // _getSchoolChannel(currentSchool) async {
-  // await _getSchoolChannel(_currentSchool);
-  // List<School>? data =
-  //     (await Uapi.getChannel(currentSchool));
-  // setState(() {
-  //   school = data!;
-  //   _currentChannel = school[0].schoolChannel!;
-  //   Constants.saveUserChannelSharedPreference(_currentChannel);
-  // });
-  // }
 
   List<DropdownMenuItem<String>> getFacultyDropDown() {
     List<DropdownMenuItem<String>> items = [];
@@ -80,6 +72,7 @@ class _ProgramsState extends State<Programs> {
         items.insert(
             0,
             DropdownMenuItem(
+                alignment: AlignmentDirectional.center,
                 child: Text(
                   program![i].programName.toString(),
                   style: TextStyle(
@@ -98,6 +91,7 @@ class _ProgramsState extends State<Programs> {
         items.insert(
             0,
             DropdownMenuItem(
+                alignment: AlignmentDirectional.center,
                 child: Text(
                   school[i].schoolName,
                   style: TextStyle(
@@ -136,13 +130,6 @@ class _ProgramsState extends State<Programs> {
       items: programDropDown,
       onChanged: changeSelectedFaculty,
       style: TextStyle(color: Colors.purple),
-      // hint: Center(
-      //   child: Text(
-      //     "Select your Program",
-      //   ),
-      // ),
-      // iconEnabledColor: Colors.purple,
-
       value: _currentProgram,
     );
     var children2 = <Widget>[
@@ -181,10 +168,6 @@ class _ProgramsState extends State<Programs> {
           ),
           items: schoolDropDown,
           onChanged: changeSelectedDepartment,
-          // hint: Text(
-          //   "Select your School/Exam",
-          //   style: TextStyle(color: Colors.purple),
-          // ),
           iconEnabledColor: Colors.purple,
           value: _currentSchool,
         ),
@@ -248,6 +231,16 @@ class _ProgramsState extends State<Programs> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+                child: Icon(Icons.refresh),
+                onTap: () {
+                  _getFaculty();
+                }),
+          )
+        ],
       ),
       body: Container(
         color: Colors.white,

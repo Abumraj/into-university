@@ -1,10 +1,3 @@
-// To parse this JSON data, do
-//
-//     final productList = productListFromJson(jsonString);
-//import 'dart:convert';
-
-import '../widgets/encrypt.dart';
-
 class VideoList {
   int? videoId;
   String? videoName;

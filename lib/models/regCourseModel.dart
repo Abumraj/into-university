@@ -4,6 +4,10 @@ class RegCourse {
   String? coursecode;
   String? courseDescrip;
   String? expireAt;
+  String? courseImage;
+  int? progress;
+  String? courseChatLink;
+  String? courseMaterialLink;
   int? id;
 
   RegCourse(
@@ -12,6 +16,10 @@ class RegCourse {
       this.coursecode,
       this.courseDescrip,
       this.expireAt,
+      this.courseImage,
+      this.progress,
+      this.courseChatLink,
+      this.courseMaterialLink,
       this.id});
 
   factory RegCourse.fromJson(Map<String, dynamic> json) {
@@ -19,8 +27,12 @@ class RegCourse {
       courseId: json['courseId'],
       courseName: json['courseName'],
       coursecode: json['coursecode'],
-      courseDescrip: json['courseDescrip'],
+      courseDescrip: json['courseDescrip'].toString(),
       expireAt: json['expireAt'],
+      courseImage: json['courseImage'],
+      progress: json['progress'],
+      courseChatLink: json['courseChatLink'],
+      courseMaterialLink: json['courseMaterialLink'],
     );
   }
   Map<String, dynamic> toJson() => {
@@ -29,5 +41,9 @@ class RegCourse {
         "coursecode": coursecode,
         "courseDescrip": courseDescrip,
         "expireAt": expireAt,
+        "courseImage": courseImage,
+        "progress": progress,
+        "courseChatLink": courseChatLink,
+        "courseMaterialLink": courseMaterialLink,
       };
 }

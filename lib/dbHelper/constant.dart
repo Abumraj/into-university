@@ -8,6 +8,9 @@ class Constants {
   static String sharedPreferenceUserProgramKey = "USERPROGRAM";
   static String sharedPreferenceUserSchoolKey = "USERSCHOOL";
   static String sharedPreferenceUserChannelKey = "USERCHANNEL";
+  static String sharedPreferenceFirebaesTokenChannelKey = "FIREBASETOKEN";
+  static String sharedPreferenceFirebaesTopicByProgramChannelKey =
+      "FIREBASETOPICBYPROGRAM";
 
   // ignore: missing_return
   static Future<bool> saveUserLoggedInSharedPreference(
@@ -20,7 +23,36 @@ class Constants {
 
   static Future<bool?> getUerLoggedInSharedPreference() async {
     SharedPreferences saveLocal = await SharedPreferences.getInstance();
-    return saveLocal.getBool(Constants.sharedPreferenceUserLoggedInKey);
+    final bool? isUserLoggedIn =
+        saveLocal.getBool(Constants.sharedPreferenceUserLoggedInKey);
+    return isUserLoggedIn;
+  }
+
+  static Future<String> saveFirebaseTokenLoggedInSharedPreference(
+      String fireToken) async {
+    SharedPreferences saveLocal = await SharedPreferences.getInstance();
+    saveLocal.setString(
+        Constants.sharedPreferenceFirebaesTokenChannelKey, fireToken);
+    return fireToken;
+  }
+
+  static Future<String> saveFirebaseTopicByProgramInSharedPreference(
+      String fireTopic) async {
+    SharedPreferences saveLocal = await SharedPreferences.getInstance();
+    saveLocal.setString(
+        Constants.sharedPreferenceFirebaesTopicByProgramChannelKey, fireTopic);
+    return fireTopic;
+  }
+
+  static Future<Object?> getFirebaseTokenSharedPreference() async {
+    SharedPreferences saveLocal = await SharedPreferences.getInstance();
+    return saveLocal.get(Constants.sharedPreferenceFirebaesTokenChannelKey);
+  }
+
+  static Future<Object?> getFirebaseTopicByProgramSharedPreference() async {
+    SharedPreferences saveLocal = await SharedPreferences.getInstance();
+    return saveLocal
+        .get(Constants.sharedPreferenceFirebaesTopicByProgramChannelKey);
   }
 
   // ignore: missing_return

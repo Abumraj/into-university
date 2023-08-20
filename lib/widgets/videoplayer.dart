@@ -1,19 +1,21 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:pod_player/pod_player.dart';
 
 class VideoPlayers extends StatefulWidget {
   final String title;
-  final String url;
-  final String description;
-  final String status;
+  final String? url;
+  final String? description;
+  final String? status;
+  final File? file;
 
   const VideoPlayers(
       {Key? key,
       required this.title,
-      required this.url,
+      this.url,
       required this.description,
+      this.file,
       required this.status})
       : super(key: key);
 
@@ -28,17 +30,19 @@ class _VideoPlayersState extends State<VideoPlayers> {
   @override
   void initState() {
     super.initState();
+    secureScreen();
     isInitialized = false;
-    // _videoPlayerController = VideoPlayerController.network(widget.url);
-
-    // _videoPlayerController2 = VideoPlayerController.file(File(url));
     controller = PodPlayerController(
         playVideoFrom: widget.status == 'downloaded'
-            ? PlayVideoFrom.file(File(widget.url))
-            : PlayVideoFrom.youtube(widget.url),
+            ? PlayVideoFrom.file(widget.file)
+            : PlayVideoFrom.youtube(widget.url!),
         podPlayerConfig: const PodPlayerConfig(
             autoPlay: true, isLooping: false, initialVideoQuality: 360))
       ..initialise();
+  }
+
+  Future<void> secureScreen() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
   @override
@@ -55,7 +59,7 @@ class _VideoPlayersState extends State<VideoPlayers> {
         title: Text(widget.title),
         centerTitle: true,
       ),
-      backgroundColor: Colors.purple,
+      backgroundColor: Colors.black,
       body: Center(
         child: AspectRatio(
           aspectRatio: 16 / 9,

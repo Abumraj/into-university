@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:uniapp/screens/mainscreen.dart';
@@ -17,19 +16,11 @@ class _PasswordVerificationState extends State<PasswordVerification> {
 
   @override
   Widget build(BuildContext context) {
-    double _headerHeight = 300;
-
     return Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(
             children: [
-              // Container(
-              //   height: _headerHeight,
-              //   child: HeaderWidget(
-              //       _headerHeight, true, Icons.privacy_tip_outlined),
-
-              // ),
               SafeArea(
                 child: Container(
                   margin: EdgeInsets.fromLTRB(25, 10, 25, 10),
@@ -70,19 +61,6 @@ class _PasswordVerificationState extends State<PasswordVerification> {
                         key: _formKey,
                         child: Column(
                           children: <Widget>[
-                            // OTPTextField(
-                            //   length: 4,
-                            //   width: 300,
-                            //   fieldWidth: 50,
-                            //   style: TextStyle(fontSize: 30),
-                            //   textFieldAlignment: MainAxisAlignment.spaceAround,
-                            //   fieldStyle: FieldStyle.underline,
-                            //   onCompleted: (pin) {
-                            //     setState(() {
-                            //       _pinSuccess = true;
-                            //     });
-                            //   },
-                            // ),
                             SizedBox(height: 50.0),
                             Text.rich(
                               TextSpan(

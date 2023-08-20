@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 // ignore: import_of_legacy_library_into_null_safe
 
 class AspirantPdf extends StatefulWidget {
@@ -11,11 +10,24 @@ class _AspirantPdfState extends State<AspirantPdf> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: Colors.deepPurple[500],
-        child:
-            WebviewScaffold(url: "https://www.youtube.com/watch?v=HPldXyxhyYA"),
-      ),
+      body: Center(
+          child: Container(
+        height: 100,
+        child: Column(
+          children: [
+            Text("Trends from different campuses will show here",
+                style: TextStyle(color: Colors.purple, fontSize: 16)),
+            SizedBox(
+              height: 10,
+            ),
+            Icon(
+              Icons.speaker_group_outlined,
+              size: 50,
+              color: Colors.purple,
+            )
+          ],
+        ),
+      )),
     );
   }
 }

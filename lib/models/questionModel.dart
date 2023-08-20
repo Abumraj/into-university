@@ -8,6 +8,7 @@ class Question {
   var option2;
   var option3;
   var option4;
+  var isRead;
 
   Question(
       {this.id,
@@ -18,9 +19,11 @@ class Question {
       this.solution,
       this.option2,
       this.option3,
-      this.option4});
+      this.option4,
+      this.isRead});
 
   factory Question.fromJson(Map<String, dynamic> json) => Question(
+        id: json["id"],
         courseId: json["courseId"],
         chapterId: json["chapterId"],
         question: json["question"],
@@ -29,9 +32,11 @@ class Question {
         option2: json["option2"],
         option3: json["option3"],
         option4: json["option4"],
+        isRead: json["isRead"],
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "courseId": courseId,
         "chapterId": chapterId,
         "question": question,
@@ -39,10 +44,6 @@ class Question {
         "solution": solution,
         "option2": option2,
         "option3": option3,
-        "option4": option4,
+        "isRead": isRead,
       };
-
-  // static List<Question> fromData(List<Map<dynamic, dynamic>> json) {
-  //   return json.map((question) => Question.fromJson(question)).toList();
-  // }
 }

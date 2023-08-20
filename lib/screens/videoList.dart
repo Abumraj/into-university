@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uniapp/widgets/videohome.dart';
-
-import '../Services/serviceImplementation.dart';
-import '../models/chapterVideoModel.dart';
-import '../repository/apiRepository.dart';
-import '../repository/apiRepositoryimplementation.dart';
+import '../dbHelper/db.dart';
+import '../entities.dart';
 
 class VideoLists extends StatefulWidget {
   final int? courseId;
@@ -16,10 +13,7 @@ class VideoLists extends StatefulWidget {
 }
 
 class _VideoListsState extends State<VideoLists> {
-  // final controller = Get.put(ChapterVideoListController());
-  ApiRepository _apiRepository = Get.put(ApiRepositoryImplementation());
-
-  List<ChapterList> chapterList = [];
+  List<Chapter> chapterList = [];
 
   @override
   void initState() {
@@ -28,12 +22,12 @@ class _VideoListsState extends State<VideoLists> {
   }
 
   _loadChapterList() async {
-    final result = await _apiRepository.getChapterList(widget.courseId!);
+    final result = await ObjectBox.getAllChapters(widget.courseId!);
     if (result.isNotEmpty) {
       setState(() {
         chapterList = result;
       });
-    } else {}
+    }
   }
 
   @override
@@ -42,7 +36,7 @@ class _VideoListsState extends State<VideoLists> {
       appBar: AppBar(
         backgroundColor: Colors.purple,
         title: Text(
-          "${widget.coursecode.toString()} : ${chapterList.length} Modules",
+          "${chapterList.length} Modules",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -66,7 +60,7 @@ class _VideoListsState extends State<VideoLists> {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, childAspectRatio: 0.8),
             itemBuilder: (BuildContext context, int index) {
-              ChapterList courseVideo = chapterList[index];
+              Chapter courseVideo = chapterList[index];
 
               return SingleProd(
                 id: courseVideo.chapterId!.toInt(),
@@ -170,117 +164,5 @@ class SingleProd extends StatelessWidget {
             ],
           )),
     );
-
-    // ClipRRect(
-    //       borderRadius: BorderRadius.all(
-    //         Radius.circular(10.0),
-    //       ),
-    //       child: InkWell(
-    //         onTap: () {
-    //           Navigator.of(context).push(
-    //             MaterialPageRoute(
-    //                 builder: (context) =>
-    //                     VideoLists(courseId: id, coursecode: code)),
-    //           );
-    //         },
-    //         child: Stack(
-    //           children: <Widget>[
-    //             Container(
-    //               height: 150.0,
-    //               width: 300.0,
-    //               child: Image(
-    //                 image: NetworkImage(imagePath),
-    //                 fit: BoxFit.cover,
-    //               ),
-    //             ),
-    //             Positioned(
-    //               child: Container(
-    //                 decoration: BoxDecoration(
-    //                     gradient: LinearGradient(
-    //                         begin: Alignment.bottomCenter,
-    //                         end: Alignment.topCenter,
-    //                         colors: [Colors.black, Colors.black12])),
-    //               ),
-    //             ),
-    //             Positioned(
-    //               left: 10.0,
-    //               bottom: 10.0,
-    //               right: 10.0,
-    //               child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                 children: <Widget>[
-    //                   Column(
-    //                     crossAxisAlignment: CrossAxisAlignment.start,
-    //                     children: <Widget>[
-    //                       Text(
-    //                         code,
-    //                         style: TextStyle(
-    //                             fontSize: 18.0,
-    //                             fontWeight: FontWeight.bold,
-    //                             color: Colors.white),
-    //                       ),
-
-    //                     ],
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ));
   }
-
-  // ListTile(
-  //                 isThreeLine: true,
-  //                 dense: true,
-  //                 leading: Container(
-  //                   width: 50,
-  //                   height: 50,
-  //                   decoration: BoxDecoration(
-  //                       borderRadius: BorderRadius.circular(10),
-  //                       image: DecorationImage(
-  //                           image: NetworkImage(
-  //                               chapterList[index].chapterImage.toString()),
-  //                           fit: BoxFit.fill)),
-  //                 ),
-  //                 title: Text(
-  //                   chapterList[index].chapterName.toString(),
-  //                   style: TextStyle(
-  //                       color: Colors.purple,
-  //                       fontSize: 15,
-  //                       fontWeight: FontWeight.bold),
-  //                 ),
-  //                 subtitle: Padding(
-  //                   padding: const EdgeInsets.only(
-  //                       top: 8.0, right: 8.0, bottom: 8.0),
-  //                   child: Text.rich(
-  //                     TextSpan(
-  //                         text: chapterList[index].chapterDescrip.toString()),
-  //                     softWrap: true,
-  //                     maxLines: 3,
-  //                     style: TextStyle(
-  //                       fontSize: 12,
-  //                       color: Colors.purple[500],
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 trailing: Badge(
-  //                   toAnimate: true,
-  //                   shape: BadgeShape.square,
-  //                   badgeColor: Colors.white,
-  //                   borderRadius: BorderRadius.circular(10),
-  //                   badgeContent: Text(
-  //                       "${chapterList[index].chapterVideoNum.toString()}",
-  //                       style: TextStyle(
-  //                           fontSize: 16,
-  //                           color: Colors.purple,
-  //                           fontWeight: FontWeight.bold)),
-  //                   child: Icon(
-  //                     Icons.video_collection_sharp,
-  //                     size: 30,
-  //                     color: Colors.purple,
-  //                   ),
-  //                 ),
-  //               ),
-
 }

@@ -36,7 +36,7 @@ List<SliderModel> getSlides() {
 
   //1
   sliderModel.setDesc(
-      "One App to Solve All Students Problems.... Encontering ang problem as a student? Consult UniApp");
+      "One App to Solve All Students Problems.... Encountering any problem as a student? Consult UniApp.");
   sliderModel.setTitle("Students N0.1 Solution Centre");
   sliderModel.setImageAssetPath("images/uniappLogo.png");
   slides.add(sliderModel);
@@ -54,7 +54,7 @@ List<SliderModel> getSlides() {
 
   //3
   sliderModel.setDesc(
-      "A universal marketplace to handle your on-campus and off-campus needs. Get anything from anywhere at anytime nationwide");
+      "A universal marketplace to handle your on-campus and off-campus needs. Get anything from anywhere at anytime nationwide. Unihub! less stress, more flex.");
   sliderModel.setTitle("Universal Hub");
   sliderModel.setImageAssetPath("images/unihub.jpg");
   slides.add(sliderModel);
@@ -62,9 +62,9 @@ List<SliderModel> getSlides() {
   sliderModel = new SliderModel();
   //4
   sliderModel.setDesc(
-      "Get all news from different universities across the nation in one place. UniApp, One App to replace them all");
+      "Get all news from different universities across the nation in one place. UniApp! One App to replace them all");
   sliderModel.setTitle("Campus Trends");
-  sliderModel.setImageAssetPath("images/uniappLogo.png");
+  sliderModel.setImageAssetPath("images/news.png");
   slides.add(sliderModel);
 
   sliderModel = new SliderModel();

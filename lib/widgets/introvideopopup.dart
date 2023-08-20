@@ -31,22 +31,22 @@ Future showDownloadPopup(BuildContext context,
     padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 12),
     innerPadding: EdgeInsets.zero,
     builder: (ctx) => FutureBuilder<String?>(
-        future: videoUrl != null ? getVideo() : null,
+        future: videoUrl != null ? null : getVideo(),
         builder: (context, snapshot) {
           return video != null || snapshot.hasData && snapshot.data != null
-              ? IntroVideoWidget(
-                  url: videoUrl!,
-                  description: description!,
+              ? const Text(
+                  "Error",
+                  style: TextStyle(
+                      color: Colors.purple,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold),
                 )
               : snapshot.hasError
-                  ? const Text(
-                      "Error",
-                      style: TextStyle(
-                          color: Colors.purple,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    )
-                  : _progressIndicator;
+                  ? _progressIndicator
+                  : IntroVideoWidget(
+                      url: videoUrl!,
+                      description: description!,
+                    );
         }),
   );
 }
@@ -119,8 +119,6 @@ class Popover extends StatelessWidget {
   }
 
   Widget _buildHandle(BuildContext context) {
-    // final theme = Theme.of(context);
-
     return SafeArea(
       bottom: false,
       child: Container(
@@ -155,9 +153,6 @@ class _IntroVideoWidgetState extends State<IntroVideoWidget> {
   void initState() {
     super.initState();
     isInitialized = false;
-    // _videoPlayerController = VideoPlayerController.network(widget.url);
-
-    // _videoPlayerController2 = VideoPlayerController.file(File(url));
     controller = PodPlayerController(
         playVideoFrom: PlayVideoFrom.youtube(widget.url),
         podPlayerConfig: const PodPlayerConfig(
@@ -192,12 +187,6 @@ class _IntroVideoWidgetState extends State<IntroVideoWidget> {
                   bufferedBarColor: Colors.purple),
             ),
           ),
-          // : Center(
-          //     child: Text(
-          //       "preparing your video preview....",
-          //       style: TextStyle(color: Colors.white),
-          //     ),
-          //   ),
         ),
         SizedBox(
           height: 5,
@@ -208,7 +197,7 @@ class _IntroVideoWidgetState extends State<IntroVideoWidget> {
             softWrap: true,
             style: TextStyle(
                 color: Colors.purple,
-                fontSize: 20,
+                fontSize: 27,
                 fontWeight: FontWeight.bold),
           ),
         ),
@@ -216,10 +205,6 @@ class _IntroVideoWidgetState extends State<IntroVideoWidget> {
     );
     //child:
   }
-
-  // Widget _playView(BuildContext context) {
-  //   return Chewie(controller: _chewieController);
-  // }
 }
 
 Future<T?> showPopoverWB<T>({
@@ -281,7 +266,7 @@ Future<T?> showPopoverWB<T>({
           children: [
             TextButton(
               style: TextButton.styleFrom(
-                primary: context.textTheme.bodyText2!.color,
+                foregroundColor: context.textTheme.bodyText2!.color,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               ),
@@ -293,7 +278,7 @@ Future<T?> showPopoverWB<T>({
             ),
             TextButton(
               style: TextButton.styleFrom(
-                primary: context.textTheme.bodyText1!.color,
+                foregroundColor: context.textTheme.bodyText1!.color,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               ),

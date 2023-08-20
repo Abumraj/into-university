@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:uniapp/screens/PasswordVerification.dart';
-import 'package:uniapp/screens/login.dart';
 import 'package:uniapp/widgets/header_widget.dart';
 import 'package:uniapp/widgets/theme_helper.dart';
 
@@ -137,11 +135,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     text: 'Login',
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Login()),
-                                        );
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //       builder: (context) => Login()),
+                                        // );
                                       },
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),

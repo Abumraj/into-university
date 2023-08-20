@@ -1,33 +1,46 @@
 class ChapterList {
-  int? chapterId;
-  String? chapterName;
-  String? chapterImage;
-  int? chapterVideoNum;
-  String? chapterDescrip;
+  int? id;
+  String? coursecode;
+  String? title;
+  String? subtitle;
+  String? liveUrl;
+  String? type;
+  String? status;
+  String? chatLink;
+  String? startAt;
 
   ChapterList({
-    this.chapterId,
-    this.chapterImage,
-    this.chapterVideoNum,
-    this.chapterName,
-    this.chapterDescrip,
+    this.id,
+    this.coursecode,
+    this.title,
+    this.subtitle,
+    this.liveUrl,
+    this.type,
+    this.status,
+    this.chatLink,
+    this.startAt,
   });
-
-  factory ChapterList.fromJson(Map<String, dynamic> json) {
-    return ChapterList(
-      chapterId: json['chapterId'],
-      chapterImage: json['chapterImage'],
-      chapterVideoNum: json['chapterVideoNum'],
-      chapterDescrip: json['chapterDescrip'],
-      chapterName: json['chapterName'],
-    );
-  }
+  factory ChapterList.fromJson(Map<String, dynamic> json) => ChapterList(
+        id: json["id"],
+        coursecode: json["coursecode"],
+        title: json["title"],
+        subtitle: json["subtitle"],
+        liveUrl: json["live_url"],
+        type: json["type"],
+        status: json["status"],
+        chatLink: json["chatLink"],
+        startAt: json["start_at"],
+      );
 
   Map<String, dynamic> toJson() => {
-        "chapterId": chapterId,
-        "chapterImage": chapterImage,
-        "chapterVideoNum": chapterVideoNum,
-        "chapterDescrip": chapterDescrip,
-        "chapterName": chapterName,
+        "id": id,
+        "coursecode": coursecode,
+        "title": title,
+        "subtitle": subtitle,
+        "live_url": liveUrl,
+        "type": type,
+        "status": status,
+        "chatLink": chatLink,
+        "start_at": startAt!,
       };
 }

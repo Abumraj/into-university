@@ -1,11 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:uniapp/Services/api.dart';
+import 'package:get/get.dart';
 import 'package:uniapp/dbHelper/constant.dart';
-import 'package:uniapp/screens/mainscreen.dart';
-import 'package:uniapp/dbHelper/db.dart';
-import 'package:uniapp/models/chapterModel.dart';
-import 'package:uniapp/models/questionModel.dart';
-import 'package:uniapp/models/regCourseModel.dart';
+import 'package:uniapp/screens/refresh.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import '../repository/apiRepository.dart';
+import '../repository/apiRepositoryimplementation.dart';
 
 class CheckoutMethodBank extends StatefulWidget {
   final amount;
@@ -15,139 +15,108 @@ class CheckoutMethodBank extends StatefulWidget {
 }
 
 class _CheckoutMethodBankState extends State<CheckoutMethodBank> {
-  // bool isGeneratingCode;
-  // String email;
-  // String token;
-  // bool done;
-  // String change = "Click to Fetch Questions";
-  // String userType;
-  // int koboAmount;
-  // bool fetching = false;
-  // DbHelper _dbHelper = DbHelper();
-  // List<RegCourse> course;
-  // Future<List<dynamic>> regCourse;
-  // List<Chapter> courses;
-  // List<dynamic> regCourses;
-  // int counter = 0;
-  // List<Question> question;
-  // List<dynamic> quest;
-  // String authorisationUrl;
-  // @override
-  // void initState() {
-  //   isGeneratingCode = true;
-  //   done = false;
-  //   koboAmount = widget.amount * 100;
-  //   _getUserTypeIjjnState();
-  //   super.initState();
-  // }
+  bool isGeneratingCode = true;
+  ApiRepository _apiRepository = Get.put(ApiRepositoryImplementation());
+  int koboAmount = 0;
+  bool fetching = false;
+  String email = '';
+  String authorisationUrl = '';
+  String callbackUrl = '';
+  String reference = '';
+  int position = 1;
+  @override
+  void initState() {
+    isGeneratingCode = true;
+    koboAmount = widget.amount;
+    _getUserTypeIjjnState();
+    super.initState();
+    if (Platform.isAndroid) {
+      WebView.platform = SurfaceAndroidWebView();
+    }
+  }
 
-  // _getUserTypeIjjnState() async {
-  //   await Constants.getUserMailSharedPreference().then((value) {
-  //     setState(() {
-  //       email = value;
-  //     });
-  //   });
-  //   await Constants.getUserTokenSharedPreference().then((value) {
-  //     setState(() {
-  //       token = value;
-  //     });
-  //   });
-  //   await Constants.getUserTypeSharedPreference().then((value) {
-  //     setState(() {
-  //       userType = value;
-  //     });
-  //   });
-  //   await Api.getStaAccessCode(koboAmount, email, userType, token)
-  //       .then((value) {
-  //     authorisationUrl = value["data"]["authorization_url"];
-  //   });
-  //   setState(() {
-  //     isGeneratingCode = false;
-  //   });
-  // }
+  _getUserTypeIjjnState() async {
+    await Constants.getUserMailSharedPreference().then((value) {
+      setState(() {
+        email = value.toString();
+      });
+    });
 
-  // Future _loadAndSave() async {
-  //   await Api.getRegCourse(userType, token).then((allRegCourse) {
-  //     course = allRegCourse;
-  //     // print(course[0]);
-  //     _dbHelper.truncateTable1().then((value) {
-  //       insert(course[0]);
-  //     });
-  //     Api.getChapter(userType, token).then((value) {
-  //       _dbHelper.truncateTable2();
-  //       _dbHelper.saveChapter(value);
-  //     });
-  //     Api.getQuestions(userType, token).then((value) {
-  //       _dbHelper.truncateTable3();
-  //       _dbHelper.saveQuestion(value);
-  //     });
-  //   });
-  // }
-
-  // insert(RegCourse regCourse) {
-  //   _dbHelper.saveRegCourse(regCourse).then((val) {
-  //     counter = counter + 1;
-  //     if (counter >= course.length) {
-  //       return;
-  //     }
-  //     RegCourse a = course[counter];
-  //     insert(a);
-  //     print(a);
-  //   });
-  // }
+    await _apiRepository.getStaAccessCode(koboAmount, email).then((value) {
+      authorisationUrl = value["paystack"]["data"]["authorization_url"];
+      callbackUrl = value["callback_url"];
+      reference = value["paystack"]["data"]["reference"];
+    });
+    setState(() {
+      isGeneratingCode = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
-    // appBar: AppBar(
-    //   title: Text(
-    //     fetching
-    //         ? "Fectching Resources"
-    //         : done ? "Done" : "Processing Payment",
-    //   ),
-    //   centerTitle: true,
-    //   elevation: 0.0,
-    // ),
-    // body: isGeneratingCode || fetching
-    //     ? Container(
-    //         padding: EdgeInsets.all(10),
-    //         child: Center(
-    //           child: RaisedButton(
-    //             color: Colors.purple,
-    //             elevation: 0.2,
-    //             child: Text(
-    //               isGeneratingCode
-    //                   ? "Processing.."
-    //                   : fetching ? change : done ? "Continue->" : "",
-    //               style: TextStyle(
-    //                   color: Colors.white, fontWeight: FontWeight.bold),
-    //             ),
-    //             onPressed: done
-    //                 ? () {
-    //                     Navigator.of(context).push(MaterialPageRoute(
-    //                         builder: (_) => MainScreen()));
-    //                   }
-    //                 : fetching
-    //                     ? () {
-    //                         setState(() {
-    //                           change = "Fetching Questions";
-    //                         });
-    //                         _loadAndSave();
-    //                       }
-    //                     : () {},
-    //           ),
-    //         ))
-    //     : WebView(
-    //         initialUrl: authorisationUrl,
-    //         javascriptMode: JavascriptMode.unrestricted,
-    //         navigationDelegate: (navigation) {
-    //           if (navigation.url == "https:") {
-    //             setState(() {
-    //               fetching = true;
-    //             });
-    //           }
-    //           return NavigationDecision.navigate;
-    //         },
-    //       ));
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            fetching ? "Fectching Resources" : "Processing Payment",
+          ),
+          centerTitle: true,
+          elevation: 0.0,
+        ),
+        body: isGeneratingCode || fetching
+            ? Container(
+                padding: EdgeInsets.all(10),
+                child: Center(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                        backgroundColor: Colors.purple,
+                        elevation: 0.2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        )),
+                    child: Text(
+                      isGeneratingCode ? "Processing.." : "",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () {},
+                  ),
+                ))
+            : IndexedStack(index: position, children: <Widget>[
+                WebView(
+                  key: Key("3"),
+                  initialUrl: authorisationUrl,
+                  javascriptMode: JavascriptMode.unrestricted,
+                  userAgent: "UniApp",
+                  onPageStarted: (value) {
+                    setState(() {
+                      position = 1;
+                    });
+                  },
+                  onPageFinished: (value) {
+                    setState(() {
+                      position = 0;
+                    });
+                  },
+                  navigationDelegate: (NavigationRequest request) {
+                    if (request.url ==
+                        'https://uniapp.ng/?trxref=$reference&reference=$reference') {
+                      _apiRepository.verifyTransaction(reference).then((value) {
+                        Get.offAll(Refresh()); //close webview
+                      });
+                    }
+                    if (request.url
+                        .startsWith('https://standard.paystack.co/close')) {
+                      _apiRepository.verifyTransaction(reference).then((value) {
+                        Get.offAll(Refresh()); //close webview
+                      }); //close webview
+                    }
+
+                    return NavigationDecision.prevent;
+                  },
+                ),
+                Container(
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              ]));
   }
 }

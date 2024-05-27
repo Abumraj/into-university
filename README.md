@@ -1,6 +1,3 @@
-
-Great, here's a draft privacy policy for your UniApp:
-
 Privacy Policy for UniApp
 
 This Privacy Policy outlines how UniApp collects, uses, and protects the personal information of its users.

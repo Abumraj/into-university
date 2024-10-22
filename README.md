@@ -1,72 +1,41 @@
-**Privacy Policy**
+Privacy Policy 
 
-This privacy policy applies to the UniApp app (hereby referred to as "Application") for mobile devices that was created by UniApp Digital Solution (hereby referred to as "Service Provider") as a Free service. This service is intended for use "AS IS".
+At UniApp, we are committed to protecting your privacy and ensuring that your personal information is handled in a safe and responsible manner. This Privacy Policy explains how we collect, use, disclose, and protect your information when you use our mobile application.
 
-**Information Collection and Use**
+1. Information We Collect
+We collect the following types of information from our users:
 
-The Application collects information when you download and use it. This information may include information such as
+Personal Information: When you create an account, we may collect personal information such as your name, email address, university, and department.
+Usage Data: We collect data on how you interact with the app, including the features you use, the content you view, and other actions you perform within UniApp through google analytics.
+Transaction Information: If you make purchases through the app, we collect information related to the transactions excluding your credit card details. we do not store your Credit Card details.
 
-*   Your device's Internet Protocol address (e.g. IP address)
-*   The pages of the Application that you visit, the time and date of your visit, the time spent on those pages
-*   The time spent on the Application
-*   The operating system you use on your mobile device
+2. How We Use Your Information
+We use the information we collect to:
 
-The Application does not gather precise information about the location of your mobile device.
+Provide, improve, and personalize the services and content within UniApp.
+Enable users to access department-specific video lessons, quizzes, and other learning materials.
+Send you notifications about important updates, events, or promotions tailored to your field of study.
+Process transactions made within the app’s e-commerce section.
+Ensure app security and prevent fraudulent or malicious activities.
+3. How We Share Your Information
+We do not sell or rent your personal information to third parties. However, we may share your information in the following cases:
 
-The Application collects your device's location, which helps the Service Provider determine your approximate geographical location and make use of in below ways:
+Service Providers: We may share your data with trusted third-party service providers who assist in operating UniApp, such as hosting services, payment processors, or analytics providers.
+Legal Compliance: We may disclose your personal information when required by law or in response to a valid legal process.
+Business Transfers: In the event of a merger, acquisition, or sale of assets, your information may be transferred to the new entity.
+4. Your Choices
+Account Deletion: Users can delete their account and associated data directly within the app by navigating to the 'Profile' section and selecting the 'Delete Account' option.
+Marketing Communications: You may opt out of receiving marketing communications from us by following the unsubscribe instructions provided in those communications.
+5. Security of Your Information
+We implement reasonable security measures to protect your personal data such as on-device fingerprint authentication etc. However, no system is completely secure, and we cannot guarantee the absolute security of your information.
 
-*   Geolocation Services: The Service Provider utilizes location data to provide features such as personalized content, relevant recommendations, and location-based services.
-*   Analytics and Improvements: Aggregated and anonymized location data helps the Service Provider to analyze user behavior, identify trends, and improve the overall performance and functionality of the Application.
-*   Third-Party Services: Periodically, the Service Provider may transmit anonymized location data to external services. These services assist them in enhancing the Application and optimizing their offerings.
+6. Children’s Privacy
+UniApp is intended for use by university students and young adults. We do not knowingly collect or solicit personal information from individuals under the age of 13. If we discover that we have inadvertently collected personal information from a child under 13, we will take steps to delete that information as soon as possible.
 
-The Service Provider may use the information you provided to contact you from time to time to provide you with important information, required notices and marketing promotions.
+7. Changes to This Privacy Policy
+We may update this Privacy Policy from time to time. When we make changes, we will update the effective date at the top of the policy and notify users via the app or other means.
 
-For a better experience, while using the Application, the Service Provider may require you to provide us with certain personally identifiable information, including but not limited to Email, phone number, sex, Full name. The information that the Service Provider request will be retained by them and used as described in this privacy policy.
+8. Contact Us
+If you have any questions or concerns about this Privacy Policy, please contact us at:
 
-**Third Party Access**
-
-Only aggregated, anonymized data is periodically transmitted to external services to aid the Service Provider in improving the Application and their service. The Service Provider may share your information with third parties in the ways that are described in this privacy statement.
-
-Please note that the Application utilizes third-party services that have their own Privacy Policy about handling data. Below are the links to the Privacy Policy of the third-party service providers used by the Application:
-
-The Service Provider may disclose User Provided and Automatically Collected Information:
-
-*   as required by law, such as to comply with a subpoena, or similar legal process;
-*   when they believe in good faith that disclosure is necessary to protect their rights, protect your safety or the safety of others, investigate fraud, or respond to a government request;
-*   with their trusted services providers who work on their behalf, do not have an independent use of the information we disclose to them, and have agreed to adhere to the rules set forth in this privacy statement.
-
-**Opt-Out Rights**
-
-You can stop all collection of information by the Application easily by uninstalling it. You may use the standard uninstall processes as may be available as part of your mobile device or via the mobile application marketplace or network.
-
-**Data Retention Policy**
-
-The Service Provider will retain User Provided data for as long as you use the Application and for a reasonable time thereafter. If you'd like them to delete User Provided Data that you have provided via the Application, please contact them at abumraj@gmail.com and they will respond in a reasonable time.
-
-**Children**
-
-The Service Provider does not use the Application to knowingly solicit data from or market to children under the age of 13.
-
-The Application does not address anyone under the age of 13\. The Service Provider does not knowingly collect personally identifiable information from children under 13 years of age. In the case the Service Provider discover that a child under 13 has provided personal information, the Service Provider will immediately delete this from their servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact the Service Provider (abumraj@gmail.com) so that they will be able to take the necessary actions.
-
-**Security**
-
-The Service Provider is concerned about safeguarding the confidentiality of your information. The Service Provider provides physical, electronic, and procedural safeguards to protect information the Service Provider processes and maintains.
-
-**Changes**
-
-This Privacy Policy may be updated from time to time for any reason. The Service Provider will notify you of any changes to the Privacy Policy by updating this page with the new Privacy Policy. You are advised to consult this Privacy Policy regularly for any changes, as continued use is deemed approval of all changes.
-
-This privacy policy is effective as of 2024-05-27
-
-**Your Consent**
-
-By using the Application, you are consenting to the processing of your information as set forth in this Privacy Policy now and as amended by us.
-
-**Contact Us**
-
-If you have any questions regarding privacy while using the Application, or have questions about the practices, please contact the Service Provider via email at abumraj@gmail.com.
-
-* * *
-
-This privacy policy page was generated by [App Privacy Policy Generator](https://app-privacy-policy-generator.nisrulz.com/)
+Email: uniapdigitalsolutions@gmail.com
